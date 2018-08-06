@@ -8,11 +8,13 @@ class DES {
 byte[] skey = new byte[1000];
 String skeyString;
 static String method;
+static long startTime;
 String[] selection={"DES","AES"};
 static byte[] raw;
 String inputMessage,encryptedData,decryptedMessage;
 
 public DES() {
+
 try {
 //generateSymmetricKey();(null,"Enter message to encrypt")
 method=(String) JOptionPane.showInputDialog(null,"Please select an encryption method","Select method",JOptionPane.QUESTION_MESSAGE,null,selection,"DES");
@@ -21,6 +23,7 @@ System.out.println(method);
 byte[] ibyte = inputMessage.getBytes();
 String rawKey = JOptionPane.showInputDialog(null,"Enter the keys in hexadecimal without prefix ('0x')");
 raw = hexStringToByteArray(rawKey);
+startTime = System.nanoTime( );
 //System.out.println("Key in byte="+raw + "Lengh: "+ raw.length);
 if(method.equals("DES"))
 {
@@ -30,13 +33,13 @@ if(method.equals("DES"))
 byte[] ebyte=encrypt(raw, ibyte);
 String encryptedData = new String(ebyte);
 System.out.println("Encrypted message "+toHex(encryptedData));
-JOptionPane.showMessageDialog(null,"Encrypted Data "+"\n"+encryptedData);
+//JOptionPane.showMessageDialog(null,"Encrypted Data "+"\n"+encryptedData);
 
 byte[] dbyte= decrypt(raw,ebyte);
 String decryptedMessage = new String(dbyte);
 System.out.println("Decrypted message "+decryptedMessage);
 
-JOptionPane.showMessageDialog(null,"Decrypted Data "+"\n"+decryptedMessage);
+//JOptionPane.showMessageDialog(null,"Decrypted Data "+"\n"+decryptedMessage);
 }
 catch(Exception e) {
 System.out.println(e);
@@ -91,9 +94,16 @@ cipher.init(Cipher.DECRYPT_MODE, skeySpec);
 byte[] decrypted = cipher.doFinal(encrypted);
 return decrypted;
 }
+
+
 public static void main(String args[]) {
 @SuppressWarnings("unused")
+//-------Time measurement!---------
 DES des = new DES();
+long endTime = System.nanoTime( );
+double estimatedTime = ((double)(endTime-startTime))/Math.pow(10,9);
+System.out.println( " time taken = " + estimatedTime + " sec " );
+//-------Time measurement end!---------
 }
 
 }
