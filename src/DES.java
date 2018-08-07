@@ -7,15 +7,19 @@ import javax.crypto.spec.SecretKeySpec;
 class DES {
 byte[] skey = new byte[1000];
 String skeyString;
+boolean lock;
+int globalCount=0;
 static String method;
 static long startTime;
 String[] selection={"DES","AES"};
-static byte[] raw;
+
 String inputMessage,encryptedData,decryptedMessage;
 
 public DES() {
 
 try {
+byte[] raw;
+int localCount=0;
 //generateSymmetricKey();(null,"Enter message to encrypt")
 method=(String) JOptionPane.showInputDialog(null,"Please select an encryption method","Select method",JOptionPane.QUESTION_MESSAGE,null,selection,"DES");
 inputMessage=JOptionPane.showInputDialog(null,"Enter message to encrypt");
@@ -23,8 +27,10 @@ System.out.println(method);
 byte[] ibyte = inputMessage.getBytes();
 String rawKey = JOptionPane.showInputDialog(null,"Enter the keys in hexadecimal without prefix ('0x')");
 raw = hexStringToByteArray(rawKey);
+int runningCount=Integer.parseInt(JOptionPane.showInputDialog(null,"Enter time you want to repeat for encryption+decryption"));
 startTime = System.nanoTime( );
 //System.out.println("Key in byte="+raw + "Lengh: "+ raw.length);
+do{
 if(method.equals("DES"))
 {
 	byte[] key8 = new byte[8];
@@ -39,8 +45,9 @@ System.out.println("Encrypted message "+toHex(encryptedData));
 byte[] dbyte= decrypt(raw,ebyte);
 String decryptedMessage = new String(dbyte);
 System.out.println("Decrypted message "+decryptedMessage);
-
-//JOptionPane.showMessageDialog(null,"Decrypted Data "+"\n"+decryptedMessage);
+System.out.println("1st time execution finished");
+localCount++;
+}while(localCount<=runningCount);
 }
 catch(Exception e) {
 System.out.println(e);
@@ -83,7 +90,7 @@ public static byte[] makeSMBKey(byte[] key7, byte[] key8) {
 private static byte[] encrypt(byte[] raw, byte[] clear) throws Exception {
 	System.out.println("Length:"+raw.length);
 SecretKeySpec skeySpec = new SecretKeySpec(raw, method);
-Cipher cipher = Cipher.getInstance(method.equals("DES")?"DES/ECB/NoPadding":"AES");
+Cipher cipher = Cipher.getInstance((method.equals("DES")?("DES/ECB/"+(clear.length%8==0?"NoPadding":"PKCS5Padding")):"AES"));
 cipher.init(Cipher.ENCRYPT_MODE, skeySpec);
 byte[] encrypted = cipher.doFinal(clear);
 return encrypted;
