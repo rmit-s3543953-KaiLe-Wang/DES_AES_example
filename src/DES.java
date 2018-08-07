@@ -29,6 +29,7 @@ if(method.equals("DES"))
 {
 	byte[] key8 = new byte[8];
 	raw=makeSMBKey( raw, key8 );
+	//System.out.println("length"+raw.length);
 }
 byte[] ebyte=encrypt(raw, ibyte);
 String encryptedData = new String(ebyte);
@@ -80,15 +81,16 @@ public static byte[] makeSMBKey(byte[] key7, byte[] key8) {
     return key8;
 }
 private static byte[] encrypt(byte[] raw, byte[] clear) throws Exception {
+	System.out.println("Length:"+raw.length);
 SecretKeySpec skeySpec = new SecretKeySpec(raw, method);
-Cipher cipher = Cipher.getInstance(method);
+Cipher cipher = Cipher.getInstance(method.equals("DES")?"DES/ECB/NoPadding":"AES");
 cipher.init(Cipher.ENCRYPT_MODE, skeySpec);
 byte[] encrypted = cipher.doFinal(clear);
 return encrypted;
 }
 
 private static byte[] decrypt(byte[] raw, byte[] encrypted) throws Exception {
-SecretKeySpec skeySpec = new SecretKeySpec(raw, method);
+SecretKeySpec skeySpec = new SecretKeySpec(raw, method.equals("DES")?"DES":"AES");
 Cipher cipher = Cipher.getInstance(method);
 cipher.init(Cipher.DECRYPT_MODE, skeySpec);
 byte[] decrypted = cipher.doFinal(encrypted);
