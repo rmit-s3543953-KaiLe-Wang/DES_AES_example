@@ -20,7 +20,6 @@ public DES() {
 try {
 byte[] raw;
 int localCount=0;
-//generateSymmetricKey();(null,"Enter message to encrypt")
 method=(String) JOptionPane.showInputDialog(null,"Please select an encryption method","Select method",JOptionPane.QUESTION_MESSAGE,null,selection,"DES");
 inputMessage=JOptionPane.showInputDialog(null,"Enter message to encrypt");
 System.out.println(method);
