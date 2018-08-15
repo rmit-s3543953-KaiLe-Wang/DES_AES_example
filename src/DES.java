@@ -10,7 +10,7 @@ String skeyString;
 boolean lock;
 int globalCount=0;
 static String method;
-static long startTime;
+static double startTime;
 String[] selection={"DES","AES"};
 
 String inputMessage,encryptedData,decryptedMessage;
@@ -37,8 +37,8 @@ if(method.equals("DES"))
 	//System.out.println("length"+raw.length);
 }
 byte[] ebyte=encrypt(raw, ibyte);
-String encryptedData = new String(ebyte);
-System.out.println("Encrypted message "+toHex(encryptedData));
+//String encryptedData = new String(ebyte);
+System.out.println("Encrypted message "+bytesToHex(ebyte));
 //JOptionPane.showMessageDialog(null,"Encrypted Data "+"\n"+encryptedData);
 
 byte[] dbyte= decrypt(raw,ebyte);
@@ -52,7 +52,16 @@ catch(Exception e) {
 System.out.println(e);
 }
 }
-
+private final static char[] hexArray = "0123456789ABCDEF".toCharArray();
+public static String bytesToHex(byte[] bytes) {
+    char[] hexChars = new char[bytes.length * 2];
+    for ( int j = 0; j < bytes.length; j++ ) {
+        int v = bytes[j] & 0xFF;
+        hexChars[j * 2] = hexArray[v >>> 4];
+        hexChars[j * 2 + 1] = hexArray[v & 0x0F];
+    }
+    return new String(hexChars);
+}
 public static byte[] hexStringToByteArray(String s) {
     int len = s.length();
     byte[] data = new byte[len / 2];
@@ -97,7 +106,7 @@ return encrypted;
 
 private static byte[] decrypt(byte[] raw, byte[] encrypted) throws Exception {
 SecretKeySpec skeySpec = new SecretKeySpec(raw, method.equals("DES")?"DES":"AES");
-Cipher cipher = Cipher.getInstance(method);
+Cipher cipher = Cipher.getInstance((method.equals("DES")?("DES/ECB/"+(encrypted.length%8==0?"NoPadding":"PKCS5Padding")):"AES"));
 cipher.init(Cipher.DECRYPT_MODE, skeySpec);
 byte[] decrypted = cipher.doFinal(encrypted);
 return decrypted;
