@@ -25,11 +25,12 @@ inputMessage=JOptionPane.showInputDialog(null,"Enter message to encrypt");
 System.out.println(method);
 byte[] ibyte = inputMessage.getBytes();
 String rawKey = JOptionPane.showInputDialog(null,"Enter the keys in hexadecimal without prefix ('0x')");
-raw = hexStringToByteArray(rawKey);
+
 int runningCount=Integer.parseInt(JOptionPane.showInputDialog(null,"Enter time you want to repeat for encryption+decryption"));
 startTime = System.nanoTime( );
 //System.out.println("Key in byte="+raw + "Lengh: "+ raw.length);
 do{
+    raw = hexStringToByteArray(rawKey);
 if(method.equals("DES"))
 {
 	byte[] key8 = new byte[8];
@@ -44,7 +45,7 @@ System.out.println("Encrypted message :0x"+bytesToHex(ebyte));
 byte[] dbyte= decrypt(raw,ebyte);
 String decryptedMessage = new String(dbyte);
 System.out.println("Decrypted message "+decryptedMessage);
-System.out.println("1st time execution finished");
+System.out.println("1 time execution finished");
 localCount++;
 }while(localCount<=runningCount);
 }
