@@ -38,7 +38,7 @@ if(method.equals("DES"))
 }
 byte[] ebyte=encrypt(raw, ibyte);
 //String encryptedData = new String(ebyte);
-System.out.println("Encrypted message "+bytesToHex(ebyte));
+System.out.println("Encrypted message :0x"+bytesToHex(ebyte));
 //JOptionPane.showMessageDialog(null,"Encrypted Data "+"\n"+encryptedData);
 
 byte[] dbyte= decrypt(raw,ebyte);
